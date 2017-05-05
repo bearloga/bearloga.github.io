@@ -40,19 +40,19 @@ a {
 {
 	content: "\f15c";
 	font-family: FontAwesome;
-	margin: 0 1em;
+	margin: 0 1em 0 0;
 }
 #featured ul#projects li:before
 {
 	content: "\f0f2";
 	font-family: FontAwesome;
-	margin: 0 1em;
+	margin: 0 1em 0 0;
 }
 #featured ul#notes li:before
 {
 	content: "\f02d";
 	font-family: FontAwesome;
-	margin: 0 1em;
+	margin: 0 1em 0 0;
 }
 #featured ul#misc li.external:before
 {
