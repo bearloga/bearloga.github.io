@@ -1,0 +1,90 @@
+html, body, div {
+    margin: 0;
+    padding: 0;
+}
+body, p, div {
+	font-family: 'Open Sans', sans-serif;
+}
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1em;
+}
+.content {
+	max-width: 650px;
+    margin: 0 auto;
+}
+a {
+	color: #1F75FE;
+}
+#featured h1 {
+	font-size: larger;
+}
+#featured h2 {
+	font-size: large;
+}
+#featured h3 {
+	font-size: medium;
+}
+#featured ul {
+    list-style: none;
+    padding: 0;
+    margin-left: 0;
+}
+#featured ul li {
+	margin-bottom: 0.25em;
+	padding-left: 5em;
+    text-indent: -2.8em;
+}
+#featured ul#reports li:before
+{
+	content: "\f15c";
+	font-family: FontAwesome;
+	margin: 0 1em;
+}
+#featured ul#projects li:before
+{
+	content: "\f0f2";
+	font-family: FontAwesome;
+	margin: 0 1em;
+}
+#featured ul#notes li:before
+{
+	content: "\f02d";
+	font-family: FontAwesome;
+	margin: 0 1em;
+}
+#featured ul#misc li.external:before
+{
+    content: "\f08e";
+    font-family: FontAwesome;
+    margin: 0 1em 0 0;
+}
+#featured ul#misc li.internal:before
+{
+    content: "\f0c1";
+    font-family: FontAwesome;
+    margin: 0 1em 0 0;
+}
+#wmf {
+	background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/60/Wmf_logo_horiz_K.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	vertical-align: middle;
+	width: 160px;
+	height: 37px;
+	margin: 63px auto;
+}
+
+dl {
+	
+}
+dt {
+	float: left;
+    clear: left;
+}
+dd {
+	margin: 0 0 0 200px;
+    padding: 0 0 1em 0;
+    color: #4a4a4a;
+}
