@@ -26,15 +26,22 @@ a {
 #featured h3 {
 	font-size: medium;
 }
-#featured ul {
+#featured ul.lvl-1 {
     list-style: none;
     padding: 0;
     margin-left: 0;
 }
-#featured ul li {
+#featured ul.lvl-2 {
+	list-style: disc;
+}
+#featured ul.lvl-1 li {
 	margin-bottom: 0.25em;
 	padding-left: 5em;
     text-indent: -2.8em;
+}
+#featured ul.lvl-2 li {
+	padding: 0 0 0 2.5em;
+	margin-top: 0.25em;
 }
 #featured ul#reports li:before
 {
