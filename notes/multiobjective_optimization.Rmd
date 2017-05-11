@@ -1,0 +1,248 @@
+---
+title: "Naive multi-objective optimization"
+output:
+  html_document:
+    code_folding: show
+    fig_height: 5
+    fig_width: 7
+    mathjax: "https://tools-static.wmflabs.org/cdnjs/ajax/libs/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    toc: yes
+    toc_depth: 2
+    md_extensions: -autolink_bare_uris+hard_line_breaks
+    self_contained: yes
+---
+
+```{r setup, include=FALSE}
+library(printr) # https://yihui.name/printr/
+library(shape)
+# install.packages("shape")
+```
+
+## Dependencies
+
+There are some packages we use for data manipulation (e.g. magrittr and dplyr) that can be quickly installed by installing tidyverse. We also use the mco package for performing true [multi-objective optimization](https://en.wikipedia.org/wiki/Multi-objective_optimization) to obtain [Pareto optimality](https://en.wikipedia.org/wiki/Pareto_efficiency).
+
+```{r dependencies}
+# install.packages(c("tidyverse", "mco"))
+library(magrittr)
+```
+
+## Data
+
+> [hyperopt_results_1-initial.csv](https://phabricator.wikimedia.org/P5418) has an initial tuning where i ran 10 iterations to find an eta for 100 trees, so i can tune other parameters with reasonably fast training rate, and then [hyperopt_results_1-final.csv](https://phabricator.wikimedia.org/P5419) which is run after tuning all the other params with 625 trees to build a final model
+
+Since **hyperopt_results_1-final.csv** has more data to work with, let's go with that one.
+
+```{r data, cache=TRUE}
+hyperopt_results <- readr::read_csv("https://phab.wmfusercontent.org/file/data/6bti3vwy6y2y45hkveps/PHID-FILE-ap3xylgefinjtf3fa5f7/hyperopt_results_1-final.csv")
+head(hyperopt_results)
+```
+
+It's worth noting that are are multiple results for certain values of $\eta$:
+
+```{r etas}
+table(hyperopt_results$eta)
+```
+
+## Multi-objective optimization
+
+Let's optimize `foo`, which will have one input ($\eta$) and 2 outputs (objectives): `ndcg@10` and `true_loss`. Since `ndcg@10` needs to be maximized, we negate `ndcg@10` so that `-ndcg@10` is minimized along with `true_loss`:
+
+```{r nsga2, cache=TRUE}
+foo <- function(x) {
+  # multi-objective function to minimize
+  idx <- which.min(abs(hyperopt_results$eta - x))
+  y <- apply(hyperopt_results[idx, c(3, 5), drop = FALSE], 2, mean)
+  y[1] <- -y[1]
+  return(y)
+}
+set.seed(0)
+algorithm <- mco::nsga2(
+  foo, 1, 2,
+  lower.bounds = min(hyperopt_results$eta),
+  upper.bounds = max(hyperopt_results$eta)
+)
+```
+
+Then we put the results into a structure that's easier to work with:
+
+```{r moo_data, dependson='nsga2'}
+moo_results <- data.frame(
+  eta = algorithm$par[algorithm$pareto.optimal, 1, drop = TRUE],
+  ndcg10 = -algorithm$value[algorithm$pareto.optimal, 1, drop = TRUE],
+  true_loss = algorithm$value[algorithm$pareto.optimal, 2, drop = TRUE]
+) %>%
+  dplyr::distinct(ndcg10, true_loss, .keep_all = TRUE) %>%
+  dplyr::arrange(eta)
+moo_results$derivative = c(NA, (moo_results$ndcg10[-1] - moo_results$ndcg10[-nrow(moo_results)])/(moo_results$true_loss[-1] - moo_results$true_loss[-nrow(moo_results)]))
+```
+
+```{r moo_print}
+head(moo_results)
+```
+
+We calculate the derivative of curve because we can use that to find the point at which we're increasing the loss faster than we are increasing `ndcg@10`:
+
+```{r moo_plot, dependson='moo_data', fig.width=12, fig.height=6, echo=FALSE}
+par(mfrow = c(1, 2))
+plot(moo_results[, 3:2], type = "l", lwd = 2,
+     xlab = expression(g[1](eta) == "true loss"),
+     ylab = expression(g[2](eta) == "ndcg@10"),
+     main = "optimal ndcg@10 vs true loss via nsga2 multi-obj optim",
+     sub = "the \"curve\" wherein we can't improve both objectives at once",
+     xlim = range(hyperopt_results$true_loss),
+     ylim = range(hyperopt_results$`ndcg@10`))
+moo_idx <- head(which(moo_results$derivative < 1), 1) - 1
+points(moo_results$true_loss[moo_idx], moo_results$ndcg10[moo_idx], pch = 16, col = "orange", cex = 2)
+plot(moo_results$eta, moo_results$derivative, type = "l", xlab = expression(eta),
+     ylab = expression(((g[2](eta[2]) - g[2](eta[1])) / (g[1](eta[2]) - g[1](eta[1])))),
+     main = "derivative of ndcg10(eta) vs true_loss(eta)",
+     xlim = range(hyperopt_results$eta), ylim = c(0, 10), lwd = 2)
+abline(h = 1, lty = "dashed", lwd = 2)
+points(moo_results$eta[moo_idx], moo_results$derivative[moo_idx], pch = 16, col = "orange", cex = 2)
+legend("topright", c(sprintf("eta = %.3f", moo_results$eta[moo_idx]), "derivative = 1"),
+       pch = c(16, NA), lty = c(NA, "dashed"), col = c("orange", "black"), bty = "n", cex = 2, lwd = c(NA, 2))
+```
+
+## Fast naive approach
+
+Let's 
+
+```{r loess_data}
+etas <- seq(min(hyperopt_results$eta), max(hyperopt_results$eta), length.out = 1e4)
+ndcg10 <- loess(`ndcg@10` ~ eta, data = hyperopt_results, span = 0.5) %>%
+  predict(data.frame(eta = etas), se = TRUE) %>%
+  {.[c("fit", "se.fit")]} %>%
+  do.call(cbind, .) %>%
+  as.data.frame %>%
+  dplyr::mutate(
+    lower_se = fit - se.fit,
+    upper_se = fit + se.fit,
+    lower_95 = fit - 1.96 * se.fit,
+    upper_95 = fit + 1.96 * se.fit
+  )
+true_loss <- loess(true_loss ~ eta, data = hyperopt_results, span = 2) %>%
+  predict(data.frame(eta = etas), se = TRUE) %>%
+  {.[c("fit", "se.fit")]} %>%
+  do.call(cbind, .) %>%
+  as.data.frame %>%
+  dplyr::mutate(
+    lower_se = fit - se.fit,
+    upper_se = fit + se.fit,
+    lower_95 = fit - 1.96 * se.fit,
+    upper_95 = fit + 1.96 * se.fit
+  )
+```
+
+```{r loess_plot, fig.height=5, fig.width=10, echo=FALSE}
+par(mfrow = c(1, 2))
+plot(hyperopt_results$eta, hyperopt_results$`ndcg@10`,
+     xlab = expression(eta), ylab = "ndcg@10")
+lines(etas, ndcg10$fit, lwd = 2)
+plot(hyperopt_results$eta, hyperopt_results$true_loss,
+     xlab = expression(eta), ylab = "true loss")
+lines(etas, true_loss$fit, lwd = 2)
+```
+
+```{r derivative}
+derivative <- c(NA, (ndcg10$fit[-1] - ndcg10$fit[-nrow(ndcg10)])/(true_loss$fit[-1] - true_loss$fit[-nrow(true_loss)]))
+idx <- unname(head(which(derivative < 1), 1)) - 1
+```
+
+```{r plot, fig.height=7, fig.width=14, echo=FALSE}
+par(mfrow = c(1, 2))
+
+plot(true_loss$fit, ndcg10$fit, type = "l", lwd = 2,
+     main = "naive (independent) ndcg@10 vs true loss via loess smoothing",
+     xlab = expression(f[1](eta) == "true loss"),
+     ylab = expression(f[2](eta) == "ndcg@10"),
+     xlim = range(hyperopt_results$true_loss),
+     ylim = range(hyperopt_results$`ndcg@10`))
+
+lines(true_loss$lower_se, ndcg10$lower_se, lty = "dashed", lwd = 2, col = rgb(0, 0, 0, 0.25))
+lines(true_loss$upper_se, ndcg10$upper_se, lty = "dashed", lwd = 2, col = rgb(0, 0, 0, 0.25))
+abline(v = true_loss$fit[idx], col = "red", lty = "dotted", lwd = 2)
+abline(h = ndcg10$fit[idx], col = "red", lty = "dotted", lwd = 2)
+points(true_loss$fit[idx], ndcg10$fit[idx], pch = 16, col = "red", cex = 2)
+
+legend("bottomright",
+       c("derivative still >1", "+/- 1 SE"),
+       lty = c(NA, "dashed"), lwd = c(NA, 2), cex = 2,
+       pch = c(16, NA), col = c("red", "black"), bty = "n")
+
+plot(etas, derivative, type = "l", lwd = 2, xlab = expression(eta),
+     ylab = expression(((f[2](eta[2]) - f[2](eta[1])) / (f[1](eta[2]) - f[1](eta[1])))),
+     main = "derivative of ndcg@10(eta) vs true loss(eta)",
+     xlim = range(hyperopt_results$eta), ylim = c(0, 10))
+
+abline(h = 1, lty = "dashed", lwd = 2)
+points(etas[idx], derivative[idx], pch = 16, col = "red", cex = 2)
+
+legend("topright", sprintf("eta = %.4f", etas[idx]), pch = 16, col = "red", bty = "n", cex = 2)
+```
+
+Doing it independently seems to yield an $\eta$ that favors loss over `ndcg@10`. Inspired by the [one standard error rule](https://stats.stackexchange.com/a/138573) from cross validation, we can find an $\eta$ that is remarkably similar to the one we get from doing the computationally expensive multi-objective optimization:
+
+```{r one_standard_error_rule}
+idx_ser_x <- which.min(abs(true_loss$lower_se - true_loss$fit[idx]))
+idx_ser_y <- which.min(abs(ndcg10$fit - ndcg10$lower_se[idx_ser_x]))
+```
+
+```{r summary}
+dplyr::data_frame(
+  point = c(rep("red", 3), rep("blue", 3)),
+  key = rep(c("eta", "true loss", "ndcg@10"), 2),
+  value = round(c(
+    etas[idx], true_loss$fit[idx], ndcg10$fit[idx],
+    etas[idx_ser_y], true_loss$fit[idx_ser_y], ndcg10$fit[idx_ser_y]
+  ), 4)
+)
+```
+
+```{r plot_zoom, fig.height=7, fig.width=14, echo=FALSE}
+par(mfrow = c(1, 2))
+
+plot(true_loss$fit, ndcg10$fit, type = "l", lwd = 2,
+     main = "naive (independent) ndcg@10 vs true loss via loess smoothing",
+     xlab = expression(f[1](eta) == "true loss"),
+     ylab = expression(f[2](eta) == "ndcg@10"),
+     xlim = quantile(hyperopt_results$true_loss, c(0.1, 0.25)),
+     ylim = quantile(hyperopt_results$`ndcg@10`, c(0.075, 0.5)))
+
+lines(true_loss$lower_se, ndcg10$lower_se, lty = "dashed", lwd = 2)
+lines(true_loss$upper_se, ndcg10$upper_se, lty = "dashed", lwd = 2)
+abline(v = true_loss$fit[idx], col = "red", lty = "dotted", lwd = 2)
+abline(h = ndcg10$fit[idx], col = "red", lty = "dotted", lwd = 2)
+points(true_loss$fit[idx], ndcg10$fit[idx], pch = 16, col = "red", cex = 2)
+
+abline(h = ndcg10$lower_se[idx_ser_x], col = "blue", lty = "dotted", lwd = 2)
+abline(v = true_loss$fit[idx_ser_y], col = "blue", lty = "dotted", lwd = 2)
+points(true_loss$fit[idx_ser_y], ndcg10$fit[idx_ser_y], pch = 16, col = "blue", cex = 2)
+
+Arrows(
+  c(true_loss$fit[idx], true_loss$fit[idx]),
+  c(ndcg10$fit[idx], ndcg10$fit[idx_ser_y]),
+  c(true_loss$fit[idx], true_loss$fit[idx_ser_y]),
+  c(ndcg10$fit[idx_ser_y], ndcg10$fit[idx_ser_y]),
+  col = "blue", lwd = 2)
+
+legend("bottomright",
+       c("derivative still >1", "red point - 1 SE", "+/- 1 SE"),
+       lty = c(NA, NA, "dashed"), lwd = c(NA, NA, 2), cex = 2,
+       pch = c(16, 16, NA), col = c("red", "blue", "black"), bty = "n")
+
+plot(etas, derivative, type = "l", lwd = 2, xlab = expression(eta),
+     ylab = expression(((f[2](eta[2]) - f[2](eta[1])) / (f[1](eta[2]) - f[1](eta[1])))),
+     main = "derivative of ndcg10(eta) vs true_loss(eta)",
+     xlim = range(hyperopt_results$eta), ylim = c(0, 10))
+
+abline(h = 1, lty = "dashed", lwd = 2)
+abline(v = etas[idx], col = "red", lty = "dotted", lwd = 2)
+abline(v = etas[idx_ser_y], col = "blue", lty = "dotted", lwd = 2)
+points(etas[idx], derivative[idx], pch = 16, col = "red", cex = 2)
+points(etas[idx_ser_y], derivative[idx_ser_y], pch = 16, col = "blue", cex = 2)
+
+legend("topright",
+       c(sprintf("eta = %.4f", etas[idx]), sprintf("eta = %.4f", etas[idx_ser_y])),
+       pch = 16, col = c("red", "blue"), bty = "n", cex = 2)
+```
