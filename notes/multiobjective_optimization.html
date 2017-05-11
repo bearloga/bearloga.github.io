@@ -372,7 +372,7 @@ moo_results$derivative = c(NA, (moo_results$ndcg10[-1] - moo_results$ndcg10[-nro
 </div>
 <div id="fast-naive-approach" class="section level2">
 <h2>Fast naive approach</h2>
-<p>Let’s</p>
+<p>Let’s use lowess (<code>loess</code>) smoothing to get <span class="math inline">\(f_\text{ndcg10}(\eta)\)</span> and <span class="math inline">\(f_\text{loss}(\eta)\)</span>. We use R’s <code>predict.loess</code> function to get fitted values and the standard errors, which will be useful later.</p>
 <pre class="r"><code>etas &lt;- seq(min(hyperopt_results$eta), max(hyperopt_results$eta), length.out = 1e4)
 ndcg10 &lt;- loess(`ndcg@10` ~ eta, data = hyperopt_results, span = 0.5) %&gt;%
   predict(data.frame(eta = etas), se = TRUE) %&gt;%

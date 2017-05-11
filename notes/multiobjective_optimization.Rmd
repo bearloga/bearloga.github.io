@@ -106,7 +106,7 @@ legend("topright", c(sprintf("eta = %.3f", moo_results$eta[moo_idx]), "derivativ
 
 ## Fast naive approach
 
-Let's 
+Let's use lowess (`loess`) smoothing to get $f_\text{ndcg10}(\eta)$ and $f_\text{loss}(\eta)$. We use R's `predict.loess` function to get fitted values and the standard errors, which will be useful later.
 
 ```{r loess_data}
 etas <- seq(min(hyperopt_results$eta), max(hyperopt_results$eta), length.out = 1e4)
