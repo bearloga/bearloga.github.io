@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sed -i '' 's=cdnjs.cloudflare.com=tools-static.wmflabs.org/cdnjs=' "$1"
+sed -i '' 's=https://cdn.mathjax.org/mathjax/latest/MathJax.js=https://tools-static.wmflabs.org/cdnjs/ajax/libs/mathjax/2.6.1/MathJax.js=' "$1"
