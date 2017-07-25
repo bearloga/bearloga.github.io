@@ -73,8 +73,12 @@ a {
     font-family: FontAwesome;
     margin: 0 1em 0 0;
 }
+#footer {
+	text-align: center;
+	font-size: xx-small;
+}
 #wmf {
-	background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/60/Wmf_logo_horiz_K.svg');
+	background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/Wikimedia_Foundation_logo_-_horizontal.svg');
 	background-position: center center;
 	background-repeat: no-repeat;
 	vertical-align: middle;
