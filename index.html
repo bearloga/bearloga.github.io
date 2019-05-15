@@ -3,9 +3,13 @@
   <head>
 	<meta charset="utf-8">
 	<title>Mikhail Popov | Data Analyst | Wikimedia Foundation</title>
-	<link rel="stylesheet" href="style.css">
-	<link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/pure/0.6.0/pure-min.css">
+	<link rel="preload" href="fonts/Charter_regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Lato_regular.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="js/fonts-loader.js" async></script>
+  <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/pure/1.0.0/pure-min.css" crossorigin="anonymous">
+	<!-- <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/5.8.2/css/all.css" crossorigin="anonymous">-->
 	<link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/style.css">
   </head>
   <body>
 	  <div class="content-wrapper">
@@ -13,8 +17,7 @@
 			<div class="pure-g">
 				<div class="pure-u-1-2" id="about">
 					<p>
-						<strong title="Hi! My name is Mikhail Popov.">Mikhail Popov</strong>
-						<br>
+						<h1 title="Hi! My name is Mikhail Popov.">Mikhail Popov</h1>
 						<span style="font-size: small;">Data Analyst in </span><a style="font-size: small;" href="https://www.mediawiki.org/wiki/Product_Analytics">Product Analytics</a>
 						<br>
 						<span style="font-size: smaller;">
@@ -30,7 +33,7 @@
 				</div>
 				<div class="pure-u-1-2">
 					<div>
-						<a title="Photo by Myleen Hollero (Myleen Hollero Photography) [CC BY-SA 3.0 (http://creativecommons.org/licenses/by-sa/3.0) or CC BY-SA 3.0 (http://creativecommons.org/licenses/by-sa/3.0)], via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File%3APopov%2C_Mikhail_January_2016.jpg"><img width="256" alt="Popov, Mikhail January 2016" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Popov%2C_Mikhail_January_2016.jpg/256px-Popov%2C_Mikhail_January_2016.jpg"/></a>
+						<a title="Myleen Hollero [CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0)], via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Popov,_Mikhail_January_2019.jpg"><img width="256" alt="Popov, Mikhail January 2019" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Popov%2C_Mikhail_January_2019.jpg/512px-Popov%2C_Mikhail_January_2019.jpg"></a>
 					</div>
 				</div>
 			</div>
@@ -43,10 +46,12 @@
 					<li><em><a href="https://wikimedia-research.github.io/Discovery-Search-Test-BM25/">Improving search result relevancy on Wikipedia with BM25 ranking</a></em></li>
 					<li><em><a href="https://commons.wikimedia.org/wiki/File:A_Test_Of_Cross-wiki_Search_-_Helping_Users_Discover_Content_On_Wikipedia%E2%80%99s_Sister_Projects.pdf">A Test Of Cross-wiki Search: Helping Users Discover Content On Wikipedia’s Sister Projects</a></em></li>
 					<li><em><a href="https://wikimedia-research.github.io/Discovery-Search-Adhoc-SurveyMVP/">Search Relevance Surveys: Judging With Human Graders &amp; Machine Learning</a></em></li>
-					<li><em><a href="https://wikimedia-research.github.io/Discovery-Search-Adhoc-InterleavedLTR/">First assessment of learning-to-rank: testing machine-learned ranking of search results on English Wikipedia</a></em></li>
+					<li><em><a href="https://wikimedia-research.github.io/Discovery-Search-Test-InterleavedLTR/">First assessment of learning-to-rank: testing machine-learned ranking of search results on English Wikipedia</a></em></li>
 					<li><em><a href="https://wikimedia-research.github.io/Discovery-Search-Adhoc-RelevanceSurveys/">Search Relevance Surveys and Deep Learning: Turning Noisy, Crowd-sourced Opinions Into An Accurate Relevance Judgement</a></em></li>
 					<li>An <a href="https://github.com/wikimedia-research/App-Android-Baseline_Metrics/tree/master/T184089">initial exploration</a> to understand Wikipedia Android app usage by market</li>
 					<li><a href="misc/android-usage-india.html">Wikipedia Android app users in India</a></li>
+					<li><a href="https://www.mediawiki.org/wiki/Reading/Search_Engine_Optimization/sameAs_test">sameAs SEO experiment analysis</a> with hierarchical linear modeling</li>
+          <li><a href="https://analytics.wikimedia.org/datasets/wikipedia-android-app-reports/suggested-edits-v1.html">Report of Suggested Edits feature usage on Wikipedia Android app</a>, a daily-updating Jupyter Notebook-based report/dashboard</li>
 				</ul>
 				<h2>Projects</h2>
 				<ul id="projects" class="lvl-1">
@@ -66,6 +71,7 @@
 					<li><a href="notes/wdqs-python.html">Wikidata Query Service in Python</a></li>
 					<li><a href="notes/cascadiarconf-2017.md">Cascadia R Conference 2017</a></li>
 					<li><a href="https://paws-public.wmflabs.org/paws/user/MPopov_%28WMF%29/notebooks/intervention-analysis-rstan.ipynb">Bayesian time series intervention analysis</a></li>
+					<li><a href="https://meta.wikimedia.org/wiki/User:MPopov_(WMF)/Notes/RStan">Installing RStan on WMF's analytics machines</a></li>
 				</ul>
 				<h2>Miscellaneous Works and Links</h2>
 				<ul id="misc" class="lvl-1">
@@ -82,9 +88,11 @@
 						</ul>
 					</li>
 					<li class="internal"><a href="https://people.wikimedia.org/~bearloga/wikimedia_treemap/">Wikimedia Universe Treemap</a></li>
-					<li class="external"><a href="https://meta.wikimedia.org/wiki/User:MPopov_(WMF)/Notes/Android_app_analytics">Android app analytics</a></li>
-					<li class="external"><a href="https://mpopov.com/blog/2018/5/24/data-analyst-vs-data-scientist-industry-perspectives">Data Analyst vs Data Scientist: Industry Perspectives</a></li>
-					<li class="external"><a href="https://mpopov.com/blog/2018/3/12/learning-to-visualize-data-with-ggplot2">Resources for learning to visualize data with R/ggplot2</a></li>
+					<li class="external"><a href="https://stattrak.amstat.org/2018/07/01/dataanalystvsscientist/">Data Analyst vs Data Scientist: Industry Perspectives</a></li>
+					<li class="external"><a href="https://bearloga.github.io/pittsburgh-user-bayesian-2018/">A Workflow For Bayesian Modeling and Reporting in R</a> presented at Pittsburgh useR Group in Pittsburgh, PA on 5 December 2018</li>
+					<li class="external"><a href="https://bearloga.github.io/bayesopt-tutorial-r/">A tutorial on Bayesian optimization in R</a>, a step-by-step demonstration of BayesOpt for derivative-free minimization of a noiseless, black-box function</li>
+					<li class="external"><a href="https://bearloga.github.io/logic-puzzle-ompr/">Solving a logic grid puzzle with integer programming</a>: modeling a logic puzzle as a constraint satisfaction problem with OMPR</li>
+					<li class="external"><a href="https://github.com/bearloga/power-analysis-multilevel-glm/blob/master/Power%20analysis%20of%20hierarchical%20GLMs.pdf">Multilevel/hierarchical generalized linear modeling and power analysis via simulation (PDF)</a>, a training lecture for Product Analytics team</li>
 				</ul>
 			</div>
 			<div id="wmf" title="By Wikimedia Foundation (Wikimedia Foundation) [CC BY-SA 3.0 (http://creativecommons.org/licenses/by-sa/3.0)], via Wikimedia Commons"></div>

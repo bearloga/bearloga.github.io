@@ -1,0 +1,178 @@
+@font-face {
+	font-family: 'Charter';
+	src: url( '..fonts/Charter_regular.woff2' ) format( 'woff2' ),
+		 url( '../fonts/Charter_regular.woff' ) format( 'woff' );
+	font-style: normal;
+	font-weight: 400;
+	text-rendering: optimizeLegibility; /* Attention: Android Stock Browser <= 4.3 doesn't show web font with this setting, but it also doesn't support WOFF :) */
+}
+
+@font-face {
+	font-family: 'Charter';
+	src: url( '../fonts/Charter_bold.woff2' ) format( 'woff2' ),
+		 url( '../fonts/Charter_bold.woff' ) format( 'woff' );
+	font-style: normal;
+	font-weight: 700;
+	text-rendering: optimizeLegibility;
+}
+
+@font-face {
+	font-family: 'Lato';
+	src: url( '../fonts/Lato_bold.woff2' ) format( 'woff2' ),
+		 url( '../fonts/Lato_bold.woff' ) format( 'woff' );
+	font-style: normal;
+	font-weight: 700;
+	text-rendering: optimizeLegibility;
+}
+
+@font-face {
+	font-family: 'Lato';
+	src: url( '../fonts/Lato_bold-italic.woff2' ) format( 'woff2' ),
+		 url( '../fonts/Lato_bold-italic.woff' ) format( 'woff' );
+	font-style: italic;
+	font-weight: 700;
+	text-rendering: optimizeLegibility;
+}
+
+@font-face {
+	font-family: 'Lato';
+	src: url( '../fonts/Lato_italic.woff2' ) format( 'woff2' ),
+		 url( '../fonts/Lato_italic.woff' ) format( 'woff' );
+	font-style: italic;
+	font-weight: 400;
+	text-rendering: optimizeLegibility;
+}
+
+@font-face {
+	font-family: 'Lato';
+	src: url( '../fonts/Lato_light.woff2' ) format( 'woff2' ),
+		 url( '../fonts/Lato_light.woff' ) format( 'woff' );
+	font-style: normal;
+	font-weight: 300;
+	text-rendering: optimizeLegibility;
+}
+
+@font-face {
+	font-family: 'Lato';
+	src: url( '../fonts/Lato_light-italic.woff2' ) format( 'woff2' ),
+		 url( '../fonts/Lato_light-italic.woff' ) format( 'woff' );
+	font-style: italic;
+	font-weight: 300;
+	text-rendering: optimizeLegibility;
+}
+
+@font-face {
+	font-family: 'Lato';
+	src: url( '../fonts/Lato_regular.woff2' ) format( 'woff2' ),
+		 url( '../fonts/Lato_regular.woff' ) format( 'woff' );
+	font-style: normal;
+	font-weight: 400;
+	text-rendering: optimizeLegibility;
+}
+
+html, body, div {
+  margin: 0;
+  padding: 0;
+}
+body, p, div {
+	font-family: 'Lato', sans-serif;
+	font-size: 12pt;
+	line-height: 18pt;
+}
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1em;
+}
+.content {
+	max-width: 650px;
+  margin: 0 auto;
+}
+a {
+	color: #1F75FE;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Charter', serif;
+}
+#featured h1 {
+	font-size: x-large;
+}
+#featured h2 {
+	font-size: large;
+}
+#featured h3 {
+	font-size: medium;
+}
+#featured ul.lvl-1 {
+    list-style: none;
+    padding: 0;
+    margin-left: 0;
+}
+#featured ul.lvl-2 {
+	list-style: disc;
+}
+#featured ul.lvl-1 li {
+	margin-bottom: 0.25em;
+	padding-left: 5em;
+    text-indent: -2.8em;
+}
+#featured ul.lvl-2 li {
+	padding: 0 0 0 2.5em;
+	margin-top: 0.25em;
+}
+#featured ul#reports li:before
+{
+	content: "\f15c";
+	font-family: FontAwesome;
+	margin: 0 1em 0 0;
+}
+#featured ul#projects li:before
+{
+	content: "\f0f2";
+	font-family: FontAwesome;
+	margin: 0 1em 0 0;
+}
+#featured ul#notes li:before
+{
+	content: "\f02d";
+	font-family: FontAwesome;
+	margin: 0 1em 0 0;
+}
+#featured ul#misc li.external:before
+{
+    content: "\f08e";
+    font-family: FontAwesome;
+    margin: 0 1em 0 0;
+}
+#featured ul#misc li.internal:before
+{
+    content: "\f0c1";
+    font-family: FontAwesome;
+    margin: 0 1em 0 0;
+}
+#footer {
+	text-align: center;
+	font-size: xx-small;
+}
+#wmf {
+	background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/Wikimedia_Foundation_logo_-_horizontal.svg');
+	background-position: center center;
+	background-repeat: no-repeat;
+	vertical-align: middle;
+	width: 160px;
+	height: 37px;
+	margin: 63px auto;
+}
+
+dl {
+	
+}
+dt {
+	float: left;
+    clear: left;
+}
+dd {
+	margin: 0 0 0 200px;
+    padding: 0 0 1em 0;
+    color: #4a4a4a;
+}
