@@ -94,66 +94,69 @@ a {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Charter', serif;
 }
-#featured h1 {
+h1 {
 	font-size: x-large;
 }
-#featured h2 {
+h2 {
 	font-size: large;
 }
-#featured h3 {
+h3 {
 	font-size: medium;
 }
-#featured ul.lvl-1 {
+ul.lvl-1 {
     list-style: none;
     padding: 0;
     margin-left: 0;
 }
-#featured ul.lvl-2 {
+ul.lvl-2 {
 	list-style: disc;
 }
-#featured ul.lvl-1 li {
+ul.lvl-1 li {
 	margin-bottom: 0.25em;
 	padding-left: 5em;
     text-indent: -2.8em;
 }
-#featured ul.lvl-2 li {
+ul.lvl-2 li {
 	padding: 0 0 0 2.5em;
 	margin-top: 0.25em;
 }
-#featured ul#reports li:before
+
+li.report:before
 {
 	content: "\f15c";
 	font-family: FontAwesome;
 	margin: 0 1em 0 0;
 }
-#featured ul#projects li:before
+li.project:before
 {
 	content: "\f0f2";
 	font-family: FontAwesome;
 	margin: 0 1em 0 0;
 }
-#featured ul#notes li:before
+li.note:before
 {
 	content: "\f02d";
 	font-family: FontAwesome;
 	margin: 0 1em 0 0;
 }
-#featured ul#misc li.external:before
+li.misc-external:before
 {
     content: "\f08e";
     font-family: FontAwesome;
     margin: 0 1em 0 0;
 }
-#featured ul#misc li.internal:before
+li.misc-internal:before
 {
     content: "\f0c1";
     font-family: FontAwesome;
     margin: 0 1em 0 0;
 }
+
 #footer {
 	text-align: center;
 	font-size: xx-small;
 }
+
 #wmf {
 	background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/Wikimedia_Foundation_logo_-_horizontal.svg');
 	background-position: center center;
@@ -164,9 +167,6 @@ h1, h2, h3, h4, h5, h6 {
 	margin: 63px auto;
 }
 
-dl {
-	
-}
 dt {
 	float: left;
     clear: left;
